@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chemistry Test Master: Atomic Structure & Periodicity</title>
+    <style>
+        :root {
+            --primary-color: #3f51b5; /* Indigo */
+            --secondary-color: #ff9800; /* Orange */
+            --background-color: #f5f5f5;
+            --card-background: #ffffff;
+            --success-color: #4caf50;
+            --error-color: #f44336;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .challenge-card {
+            flex: 1;
+            min-width: 450px;
+            background-color: var(--card-background);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        .question-box {
+            background-color: #e8eaf6; /* Light Indigo */
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #1a237e;
+        }
+
+        /* P-N-E Challenge Specific Styles */
+        .pne-inputs input {
+            width: 80px;
+            padding: 8px;
+            margin-right: 15px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+        }
+        
+        .pne-inputs label {
+            font-weight: normal;
+        }
+        
+        .pne-inputs div {
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        /* Property Matcher Specific Styles */
+        .option-button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+            font-size: 1em;
+            text-align: left;
+        }
+
+        .option-button:hover:not(:disabled) {
+            background-color: #e8eaf6;
+        }
+        
+        .option-button.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .option-button.incorrect {
+            background-color: var(--error-color);
+            color: white;
+            border-color: var(--error-color);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .feedback.success {
+            background-color: #e8f5e9; /* Light Green */
+            border-left: 5px solid var(--success-color);
+            color: #2e7d32;
+        }
+
+        .feedback.error {
+            background-color: #ffebee; /* Light Red */
+            border-left: 5px solid var(--error-color);
+            color: #c62828;
+        }
+
+        .check-btn, .next-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+
+        .check-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .check-btn:hover {
+            background-color: #303f9f;
+        }
+
+        .next-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            display: none; /* Initially hidden */
+        }
+        
+        .next-btn:hover {
+            background-color: #fb8c00;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Master Teacher's Chemistry Test Prep 🧪</h1>
+    
+    <div class="container">
+        
+        <div id="pne-challenge" class="challenge-card">
+            <h2>1. P-N-E Calculator Challenge (Formula Practice)</h2>
+            <p>Calculate Protons, Neutrons, and Electrons for the element shown. *Use the rounded Atomic Mass for Neutron calculation.*</p>
+            
+            <div id="pne-question" class="question-box"></div>
+            
+            <div class="pne-inputs">
+                <div>
+                    <label for="input-protons">Protons (P+):</label>
+                    <input type="number" id="input-protons" min="0">
+                </div>
+                <div>
+                    <label for="input-neutrons">Neutrons (N0):</label>
+                    <input type="number" id="input-neutrons" min="0">
+                </div>
+                <div>
+                    <label for="input-electrons">Electrons (e-):</label>
+                    <input type="number" id="input-electrons" min="0">
+                </div>
+            </div>
+            
+            <button class="check-btn" onclick="checkPNE()">CHECK P-N-E</button>
+            <button id="pne-next-btn" class="next-btn" onclick="loadPNEQuestion()">NEXT ELEMENT</button>
+            
+            <div id="pne-feedback" class="feedback"></div>
+        </div>
+
+        <div id="property-challenge" class="challenge-card">
+            <h2>2. Periodic Property Matcher (Classification & Recall)</h2>
+            <p>Select the correct rule or property that matches the element's position on the Periodic Table.</p>
+            
+            <div id="property-question" class="question-box"></div>
+            
+            <div id="property-options">
+                </div>
+            
+            <button id="property-next-btn" class="next-btn" onclick="loadPropertyQuestion()">NEXT QUESTION</button>
+
+            <div id="property-feedback" class="feedback"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // Data for P-N-E Calculator Challenge (Element, Atomic #, Atomic Mass)
+        const ELEMENTS_PNE = [
+            { name: "Oxygen", symbol: "O", Z: 8, A: 16.00 },
+            { name: "Potassium", symbol: "K", Z: 19, A: 39.10 },
+            { name: "Aluminum", symbol: "Al", Z: 13, A: 26.98 },
+            { name: "Fluorine", symbol: "F", Z: 9, A: 19.00 },
+            { name: "Neon", symbol: "Ne", Z: 10, A: 20.18 },
+            { name: "Sulfur", symbol: "S", Z: 16, A: 32.06 },
+            { name: "Calcium", symbol: "Ca", Z: 20, A: 40.08 },
+            { name: "Lithium", symbol: "Li", Z: 3, A: 6.94 },
+            { name: "Magnesium", symbol: "Mg", Z: 12, A: 24.31 },
+            { name: "Phosphorus", symbol: "P", Z: 15, A: 30.97 }
+        ];
+
+        // Data for Property Matcher Challenge (Element, Period, Family, Valence e-, Energy Levels, Classification)
+        const ELEMENTS_PROPERTY = [
+            { name: "Carbon", Period: 2, Family: 14, Valence: 4, Levels: 2, Class: "Non-metal" },
+            { name: "Sodium", Period: 3, Family: 1, Valence: 1, Levels: 3, Class: "Metal" },
+            { name: "Chlorine", Period: 3, Family: 17, Valence: 7, Levels: 3, Class: "Non-metal" },
+            { name: "Tellurium", Period: 5, Family: 16, Valence: 6, Levels: 5, Class: "Metalloid" }, // Example from the review sheet [cite: 32]
+            { name: "Argon", Period: 3, Family: 18, Valence: 8, Levels: 3, Class: "Non-metal" }, // Example from the review sheet [cite: 32]
+            { name: "Arsenic", Period: 4, Family: 15, Valence: 5, Levels: 4, Class: "Metalloid" }, // Example from the review sheet [cite: 32]
+            { name: "Barium", Period: 6, Family: 2, Valence: 2, Levels: 6, Class: "Metal" },
+            { name: "Iodine", Period: 5, Family: 17, Valence: 7, Levels: 5, Class: "Non-metal" }
+        ];
+
+        let currentPNE;
+        let currentPropertyQ;
+
+        // --- P-N-E Calculator Logic ---
+
+        function loadPNEQuestion() {
+            const randomIndex = Math.floor(Math.random() * ELEMENTS_PNE.length);
+            currentPNE = ELEMENTS_PNE[randomIndex];
+
+            // Calculate correct answers
+            const Z = currentPNE.Z;
+            const A_rounded = Math.round(currentPNE.A);
+            currentPNE.protons = Z;
+            currentPNE.electrons = Z; // Neutral atom
+            currentPNE.neutrons = A_rounded - Z;
+
+            document.getElementById('pne-question').innerHTML = `
+                What are the P+, N0, and e- for **${currentPNE.name} (${currentPNE.symbol})**?<br>
+                <small>(Atomic Number: ${currentPNE.Z}, Atomic Mass: ${currentPNE.A})</small>
+            `;
+            
+            // Clear inputs and feedback
+            document.getElementById('input-protons').value = '';
+            document.getElementById('input-neutrons').value = '';
+            document.getElementById('input-electrons').value = '';
+            document.getElementById('pne-feedback').className = 'feedback';
+            document.getElementById('pne-feedback').innerHTML = 'Awaiting input...';
+            document.querySelector('#pne-challenge .check-btn').style.display = 'inline-block';
+            document.getElementById('pne-next-btn').style.display = 'none';
+        }
+
+        function checkPNE() {
+            const pInput = parseInt(document.getElementById('input-protons').value);
+            const nInput = parseInt(document.getElementById('input-neutrons').value);
+            const eInput = parseInt(document.getElementById('input-electrons').value);
+
+            let feedbackDiv = document.getElementById('pne-feedback');
+            
+            if (isNaN(pInput) || isNaN(nInput) || isNaN(eInput)) {
+                feedbackDiv.className = 'feedback error';
+                feedbackDiv.innerHTML = 'Please enter a number for all three values before checking.';
+                return;
+            }
+
+            if (pInput === currentPNE.protons && nInput === currentPNE.neutrons && eInput === currentPNE.electrons) {
+                feedbackDiv.className = 'feedback success';
+                feedbackDiv.innerHTML = `
+                    ✅ **Correct!** You've mastered the formula application.<br>
+                    **P/e- Rule:** The number of **Protons (P+)** and **Electrons (e-)** must equal the **Atomic Number (${currentPNE.Z})**[cite: 5].<br>
+                    **N0 Rule:** The number of **Neutrons (N0)** is the **Rounded Atomic Mass (${Math.round(currentPNE.A)})** minus the **Atomic Number (${currentPNE.Z})**[cite: 5].
+                `;
+                document.querySelector('#pne-challenge .check-btn').style.display = 'none';
+                document.getElementById('pne-next-btn').style.display = 'inline-block';
+            } else {
+                let p_correct = pInput === currentPNE.protons;
+                let e_correct = eInput === currentPNE.electrons;
+                let n_correct = nInput === currentPNE.neutrons;
+
+                feedbackDiv.className = 'feedback error';
+                feedbackDiv.innerHTML = `
+                    ❌ **Incorrect.** Review the rules:<br>
+                    - **Protons/Electrons:** Must equal the Atomic Number (${currentPNE.Z}). You put P+:${pInput} (Correct: ${currentPNE.protons}), e-:${eInput} (Correct: ${currentPNE.electrons}).<br>
+                    - **Neutrons:** Must equal Rounded Atomic Mass (${Math.round(currentPNE.A)}) - Atomic Number (${currentPNE.Z}). Correct value is **${currentPNE.neutrons}**. You put N0:${nInput}.
+                `;
+            }
+        }
+
+
+        // --- Periodic Property Matcher Logic ---
+
+        function loadPropertyQuestion() {
+            const randomIndex = Math.floor(Math.random() * ELEMENTS_PROPERTY.length);
+            currentPropertyQ = ELEMENTS_PROPERTY[randomIndex];
+
+            // Define the types of questions possible
+            const questionTypes = [
+                { 
+                    qText: `How many **Valence Electrons** does **${currentPropertyQ.name}** have?`, 
+                    correct: currentPropertyQ.Valence, 
+                    options: [currentPropertyQ.Valence, currentPropertyQ.Valence + 1, currentPropertyQ.Valence + 2, currentPropertyQ.Valence - 1].filter(v => v >= 1 && v <= 8),
+                    rule: `The number of **valence electrons** is determined by the **Family (Group) Number**. Since ${currentPropertyQ.name} is in **Family ${currentPropertyQ.Family}**, it has **${currentPropertyQ.Valence}** valence electrons (for Groups 13-18, the second digit is used).`
+                },
+                { 
+                    qText: `How many **Energy Levels** (shells) are in a neutral atom of **${currentPropertyQ.name}**?`, 
+                    correct: currentPropertyQ.Levels, 
+                    options: [currentPropertyQ.Levels, currentPropertyQ.Levels + 1, currentPropertyQ.Levels - 1].filter(v => v >= 1 && v <= 7),
+                    rule: `The number of **Energy Levels** is determined by the element's **Period Number**. Since ${currentPropertyQ.name} is in **Period ${currentPropertyQ.Period}**, it must have **${currentPropertyQ.Levels}** energy levels.`
+                },
+                {
+                    qText: `**${currentPropertyQ.name}** is in **Period ${currentPropertyQ.Period}** and **Family ${currentPropertyQ.Family}**. Which of these is a correct statement about it?`,
+                    correct: `It has ${currentPropertyQ.Levels} energy levels and ${currentPropertyQ.Valence} valence electrons.`,
+                    options: [
+                        `It has ${currentPropertyQ.Levels} energy levels and ${currentPropertyQ.Valence} valence electrons.`, // Correct
+                        `It has ${currentPropertyQ.Valence} energy levels and ${currentPropertyQ.Levels} valence electrons.`, // Swapped
+                        `It has ${currentPropertyQ.Levels + 1} energy levels and ${currentPropertyQ.Valence} valence electrons.`, // Wrong Levels
+                        `It has ${currentPropertyQ.Levels} energy levels and ${currentPropertyQ.Valence + 1} valence electrons.`  // Wrong Valence
+                    ],
+                    rule: `The **Period** number (${currentPropertyQ.Period}) equals the number of **energy levels**. The **Family** number (${currentPropertyQ.Family}) determines the number of **valence electrons** (${currentPropertyQ.Valence})[cite: 7, 16].`
+                }
+            ];
+
+            const qTypeIndex = Math.floor(Math.random() * questionTypes.length);
+            const question = questionTypes[qTypeIndex];
+            currentPropertyQ.rule = question.rule;
+            currentPropertyQ.correctAnswer = question.correct;
+
+            document.getElementById('property-question').textContent = question.qText;
+            
+            // Shuffle options (using a copy) and ensure the correct answer is present
+            let uniqueOptions = [...new Set(question.options)];
+            if (!uniqueOptions.includes(question.correct)) {
+                uniqueOptions.push(question.correct);
+            }
+            // Simple shuffle
+            for (let i = uniqueOptions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [uniqueOptions[i], uniqueOptions[j]] = [uniqueOptions[j], uniqueOptions[i]];
+            }
+
+            const optionsDiv = document.getElementById('property-options');
+            optionsDiv.innerHTML = ''; // Clear previous options
+            uniqueOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => checkPropertyAnswer(option, question.correct, question.rule);
+                optionsDiv.appendChild(button);
+            });
+
+            // Clear feedback and show controls
+            document.getElementById('property-feedback').className = 'feedback';
+            document.getElementById('property-feedback').innerHTML = 'Select an option above.';
+            document.getElementById('property-next-btn').style.display = 'none';
+        }
+
+        function checkPropertyAnswer(selectedAnswer, correctAnswer, rule) {
+            const feedbackDiv = document.getElementById('property-feedback');
+            const options = document.getElementById('property-options').children;
+
+            // Disable all buttons and highlight correct/incorrect
+            for (let i = 0; i < options.length; i++) {
+                options[i].disabled = true;
+                if (options[i].textContent == correctAnswer) {
+                    options[i].classList.add('correct');
+                } else if (options[i].textContent == selectedAnswer) {
+                    options[i].classList.add('incorrect');
+                }
+            }
+
+            if (selectedAnswer == correctAnswer) {
+                feedbackDiv.className = 'feedback success';
+                feedbackDiv.innerHTML = `
+                    🎉 **Correct!** Great recall!<br>
+                    **Rule/Concept:** ${rule}
+                `;
+            } else {
+                feedbackDiv.className = 'feedback error';
+                feedbackDiv.innerHTML = `
+                    😔 **Incorrect.** Keep practicing!<br>
+                    **The correct answer was:** ${correctAnswer}.<br>
+                    **Rule/Concept:** ${rule}
+                `;
+            }
+            
+            document.getElementById('property-next-btn').style.display = 'inline-block';
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadPNEQuestion();
+            loadPropertyQuestion();
+        });
+    </script>
+
+</body>
+</html>
